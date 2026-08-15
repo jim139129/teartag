@@ -1,0 +1,20 @@
+{
+  "allow_self": false,
+  "any_of": [
+    {
+      "attacker_requires": ["mygame.hunter", "mygame.active"],
+      "attacker_forbids": ["mygame.stunned"],
+      "target_requires": ["mygame.runner", "mygame.active"],
+      "target_forbids": ["mygame.immune"],
+      "team": "different"
+    }
+  ],
+  "participant_damage": "deny",
+  "damage_rules": [
+    {
+      "attacker_requires": ["mygame.hunter", "mygame.active"],
+      "target_requires": ["mygame.runner", "mygame.active"],
+      "policy": "allow"
+    }
+  ]
+}

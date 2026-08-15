@@ -1,0 +1,17 @@
+# Gradle / Loom
+.gradle/
+build/
+out/
+run/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Legacy datapack/resource pack kept locally for manual removal.
+/nametag/
+/nametag-resources-new/
+
+*.log
+hs_err_pid*

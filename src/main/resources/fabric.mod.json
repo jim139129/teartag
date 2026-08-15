@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "teartag",
+  "version": "${version}",
+  "name": "TearTag",
+  "description": "A server-authoritative nametag-tearing mechanic for Minecraft minigames.",
+  "authors": ["TearTag contributors"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.teartag.NameTagMod"],
+    "client": ["dev.teartag.client.NameTagClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": "26.1.2",
+    "java": ">=25",
+    "fabric-api": ">=0.155.2"
+  },
+  "suggests": {
+    "trinkets_updated": ">=4.0.0-beta.3+26.1"
+  }
+}

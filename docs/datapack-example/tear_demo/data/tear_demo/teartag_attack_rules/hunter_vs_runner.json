@@ -1,0 +1,19 @@
+{
+  "allow_self": false,
+  "any_of": [
+    {
+      "attacker_requires": ["tear_demo.hunter", "tear_demo.active"],
+      "attacker_forbids": ["tear_demo.stunned"],
+      "target_requires": ["tear_demo.runner", "tear_demo.active"],
+      "target_forbids": ["tear_demo.immune"],
+      "team": "any"
+    }
+  ],
+  "damage_rules": [
+    {
+      "attacker_requires": ["tear_demo.hunter", "tear_demo.active"],
+      "target_requires": ["tear_demo.runner", "tear_demo.active"],
+      "policy": "allow"
+    }
+  ]
+}

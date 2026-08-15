@@ -1,0 +1,13 @@
+{
+  "message.teartag.own_progress": "名牌被撕：%s/%s",
+  "message.teartag.target_progress": "%s 的名牌：%s/%s",
+  "command.teartag.rule_missing": "未找到名牌攻击规则：%s",
+  "command.teartag.status_disabled": "%s 尚未启用名牌",
+  "command.teartag.status": "%s：启用=%s，进度=%s/%s，淘汰=%s，规则=%s，文字=",
+  "command.teartag.config_reloaded": "TearTag 配置已重新加载",
+  "title.teartag.eliminated": "你被淘汰了！",
+  "subtitle.teartag.eliminated": "请等待传送",
+  "item.teartag.nametag": "撕名牌",
+  "trinkets.slot.teartag.nametag": "名牌",
+  "tag.item.trinkets.teartag.nametag": "撕名牌"
+}

@@ -1,0 +1,8 @@
+{
+  "icon": "trinkets:container/slots/necklace",
+  "order": -512,
+  "amount": 1,
+  "max_stack_size": 1,
+  "validator_predicates": ["trinkets:default"],
+  "interact_equipable_predicates": ["trinkets:default"]
+}

@@ -1,0 +1,13 @@
+{
+  "message.teartag.own_progress": "Nametag torn: %s/%s",
+  "message.teartag.target_progress": "%s's nametag: %s/%s",
+  "command.teartag.rule_missing": "Unknown TearTag attack rule: %s",
+  "command.teartag.status_disabled": "%s does not have a nametag enabled",
+  "command.teartag.status": "%s: enabled=%s, progress=%s/%s, eliminated=%s, rule=%s, text=",
+  "command.teartag.config_reloaded": "TearTag configuration reloaded",
+  "title.teartag.eliminated": "You were eliminated!",
+  "subtitle.teartag.eliminated": "Waiting to teleport",
+  "item.teartag.nametag": "TearTag nametag",
+  "trinkets.slot.teartag.nametag": "Nametag",
+  "tag.item.trinkets.teartag.nametag": "TearTag nametags"
+}

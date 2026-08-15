@@ -1,0 +1,6 @@
+{
+  "allow_self": false,
+  "any_of": [
+    { "team": "any" }
+  ]
+}
