@@ -5,8 +5,8 @@ TearTag 是面向 Minecraft 26.1.2 的 Fabric 撕名牌机制模组。服务端�
 ## 构建与安装
 
 - Java 25
-- Fabric Loader 0.19.3+
-- Fabric API 0.155.2+26.1.2
+- Fabric Loader 0.19.5+
+- Fabric API 0.161.0+26.3
 
 TearTag 始终注册不可堆叠的 `teartag:nametag` 物品；可选安装 Trinkets Updated（`4.0.0-beta.3+26.1`）来提供独立的 `teartag/nametag` 饰品槽位。`/teartag enable` 可按配置自动填入该槽位。`config/teartag.toml` 的 `[trinkets]` 部分控制启用时自动装备、装备时启用以及卸下时禁用。未安装 Trinkets 时，TearTag 原有功能不受影响。
 

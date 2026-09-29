@@ -12,7 +12,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityRenderLayerRegist
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.model.player.PlayerModel;
-import net.minecraft.world.entity.EntityType;
 
 public final class NameTagClient implements ClientModInitializer {
     @Override
@@ -29,7 +28,7 @@ public final class NameTagClient implements ClientModInitializer {
             ClientFeedback.tick();
         });
         LivingEntityRenderLayerRegistrationCallback.EVENT.register((entityType, renderer, helper, context) -> {
-            if (entityType == EntityType.PLAYER && renderer instanceof AvatarRenderer<?> avatarRenderer) {
+            if (renderer instanceof AvatarRenderer<?> avatarRenderer) {
                 @SuppressWarnings("unchecked")
                 var parent = (net.minecraft.client.renderer.entity.RenderLayerParent<AvatarRenderState, PlayerModel>) avatarRenderer;
                 helper.register(new NametagRenderLayer(parent));

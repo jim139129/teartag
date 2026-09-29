@@ -41,7 +41,7 @@ public final class NametagRenderLayer extends RenderLayer<AvatarRenderState, Pla
         } else {
             poseStack.pushPose();
             poseStack.translate(0.0F, animation * animation * 1.2F, animation * 0.8F);
-            poseStack.mulPose(com.mojang.math.Axis.ZP.rotationDegrees(animation * 70.0F));
+            poseStack.rotateAround(com.mojang.math.Axis.ZP.rotationDegrees(animation * 70.0F), 0.0F, 0.0F, 0.0F);
             submitPlate(poseStack, collector, light, width, height, tag.paperColor(), tag.borderColor(), tag.requiredTears(), tag.requiredTears());
             submitText(poseStack, collector, light, tag, width, height);
             poseStack.popPose();
@@ -52,8 +52,8 @@ public final class NametagRenderLayer extends RenderLayer<AvatarRenderState, Pla
     private static void submitPlate(PoseStack stack, SubmitNodeCollector collector, int light, float width, float height,
                                     int paperColor, int borderColor, int tears, int required) {
         float border = 0.018F;
-        collector.submitCustomGeometry(stack, RenderTypes.textBackground(), (pose, vertices) -> quad(vertices, pose, -width / 2 - border, -height / 2 - border, width / 2 + border, height / 2 + border, 0, borderColor, light));
-        collector.submitCustomGeometry(stack, RenderTypes.textBackground(), (pose, vertices) -> quad(vertices, pose, -width / 2, -height / 2, width / 2, height / 2, -0.001F, paperColor, light));
+        collector.submitCustomGeometry(stack, RenderTypes.debugFilledBox(), (pose, vertices) -> quad(vertices, pose, -width / 2 - border, -height / 2 - border, width / 2 + border, height / 2 + border, 0, borderColor, light));
+        collector.submitCustomGeometry(stack, RenderTypes.debugFilledBox(), (pose, vertices) -> quad(vertices, pose, -width / 2, -height / 2, width / 2, height / 2, -0.001F, paperColor, light));
         if (tears > 0) {
             float progress = Math.min(1.0F, tears / (float) Math.max(1, required));
             int tearColor = 0xFF9A3328;
@@ -62,7 +62,7 @@ public final class NametagRenderLayer extends RenderLayer<AvatarRenderState, Pla
                 float depth = height * progress * (0.25F + 0.12F * (i % 3));
                 final float fx = x;
                 final float fd = depth;
-                collector.submitCustomGeometry(stack, RenderTypes.textBackground(), (pose, vertices) -> quad(vertices, pose, fx - 0.012F, -height / 2, fx + 0.012F, -height / 2 + fd, -0.004F, tearColor, light));
+                collector.submitCustomGeometry(stack, RenderTypes.debugFilledBox(), (pose, vertices) -> quad(vertices, pose, fx - 0.012F, -height / 2, fx + 0.012F, -height / 2 + fd, -0.004F, tearColor, light));
             }
         }
     }

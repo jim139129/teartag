@@ -13,12 +13,12 @@
     "client": ["dev.teartag.client.NameTagClient"]
   },
   "depends": {
-    "fabricloader": ">=0.19.3",
-    "minecraft": "26.1.2",
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.3",
     "java": ">=25",
-    "fabric-api": ">=0.155.2"
+    "fabric-api": ">=0.161.0"
   },
   "suggests": {
-    "trinkets_updated": ">=4.0.0-beta.3+26.1"
+    "trinkets_updated": ">=4.2.0+26.3"
   }
 }

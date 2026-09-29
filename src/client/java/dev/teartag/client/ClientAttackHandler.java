@@ -16,7 +16,7 @@ public final class ClientAttackHandler {
 
     public static void tick(Minecraft client) {
         boolean down = client.options.keyAttack.isDown();
-        if (down && !wasDown && client.player != null && client.level != null && client.screen == null) {
+        if (down && !wasDown && client.player != null && client.level != null && !client.canInterruptScreen()) {
             findTarget(client);
         }
         wasDown = down;

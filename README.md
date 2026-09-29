@@ -1,30 +1,28 @@
 # TearTag
 
-Fabric mod for a Minecraft 26.1.2 nametag-tearing minigame. TearTag renders a dynamic paper nametag on each enabled player's back and validates every tear attempt on the logical server.
+Fabric mod for a Minecraft 26.3 nametag-tearing minigame. TearTag renders a dynamic paper nametag on each enabled player's back and validates every tear attempt on the logical server.
 
 Both the server and every client must install the mod. No generated per-player resource pack, chest-slot item, or following interaction entity is used.
 
 ## Requirements
 
-- Minecraft 26.1.2
+- Minecraft 26.3
 - Fabric Loader 0.19.3 or newer
-- Fabric API 0.155.2+26.1.2 or newer compatible build
+- Fabric API 0.161.0+26.3 or newer compatible build
 - Java 25
 
 Optional accessory storage:
 
-- TearTag always registers the single-stack `teartag:nametag` item. [Trinkets Updated 4.0.0-beta.3+26.1](https://modrinth.com/mod/trinkets-updated) adds its dedicated `teartag/nametag` slot.
+- TearTag always registers the single-stack `teartag:nametag` item. [Trinkets Updated 4.2.1+26.3](https://modrinth.com/mod/trinkets-updated) adds its dedicated `teartag/nametag` slot.
 - When Trinkets is installed, `/teartag enable` automatically fills that slot if configured. Dynamic back rendering continues to use TearTag's server-authoritative state.
 - Trinkets settings are under `[trinkets]` in `config/teartag.toml`. They control automatic equip, enabling on equip, and disabling on unequip. The core mod remains usable without Trinkets.
 
 Build on Windows:
 
 ```powershell
-$env:JAVA_HOME='C:\Program Files\Java\jdk-25.0.2'
 .\gradlew.bat build
 ```
 
-The output mod is `build/libs/teartag-1.1.jar`.
 
 ## Commands
 
