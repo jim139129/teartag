@@ -34,6 +34,11 @@ public final class ConfigManager {
                 return doc.errors().stream().map(Object::toString).toList();
             }
             NameTagConfig d = NameTagConfig.defaults();
+            double[] renderSize = NameTagConfig.migrateLegacyRenderSize(
+                number(doc, "render.width", d.tagWidth()), number(doc, "render.height", d.tagHeight()), d.tagWidth(), d.tagHeight());
+            double backOffset = NameTagConfig.migrateLegacyBackOffset(number(doc, "render.back_offset", d.tagBackOffset()), d.tagBackOffset());
+            double verticalOffset = NameTagConfig.migrateLegacyVerticalOffset(number(doc, "render.vertical_offset", d.tagVerticalOffset()), d.tagVerticalOffset());
+            float textScale = NameTagConfig.migrateLegacyTextScale((float) number(doc, "render.text_scale", d.textScale()), d.textScale());
             NameTagConfig loaded = new NameTagConfig(
                 number(doc, "combat.attack_distance", d.attackDistance()),
                 integer(doc, "combat.attack_cooldown_ticks", d.attackCooldownTicks()),
@@ -61,13 +66,14 @@ public final class ConfigManager {
                 integer(doc, "commands.permission_level", d.commandPermissionLevel()),
                 integer(doc, "text.max_code_points", d.maxTextCodePoints()),
                 integer(doc, "text.max_lines", d.maxTextLines()),
-                number(doc, "render.width", d.tagWidth()),
-                number(doc, "render.height", d.tagHeight()),
-                number(doc, "render.back_offset", d.tagBackOffset()),
-                number(doc, "render.vertical_offset", d.tagVerticalOffset()),
-                (float) number(doc, "render.text_scale", d.textScale()),
+                renderSize[0],
+                renderSize[1],
+                backOffset,
+                verticalOffset,
+                textScale,
                 color(doc, "render.paper_color", d.paperColor()),
                 color(doc, "render.border_color", d.borderColor()),
+                color(doc, "render.text_color", d.textColor()),
                 bool(doc, "trinkets.auto_equip_on_enable", d.trinketsAutoEquipOnEnable()),
                 bool(doc, "trinkets.enable_on_equip", d.trinketsEnableOnEquip()),
                 bool(doc, "trinkets.disable_on_unequip", d.trinketsDisableOnUnequip()),
@@ -166,13 +172,14 @@ public final class ConfigManager {
         max_lines = 2                   # Maximum wrapped lines rendered; range 1..8
 
         [render]
-        width = 0.82                    # Plate and server hit rectangle width; range 0.1..4.0
-        height = 0.55                   # Plate and server hit rectangle height; range 0.1..4.0
-        back_offset = 0.32              # Plate center behind player origin; range 0.0..2.0
-        vertical_offset = 0.95          # Plate center above player feet; range 0.0..3.0
-        text_scale = 0.010              # Text pixel size in world blocks; range 0.001..0.1
-        paper_color = "#FFF5F1E8"       # ARGB or RGB hexadecimal color
-        border_color = "#FF34312C"      # ARGB or RGB hexadecimal color
+        width = 0.60                    # Rendered plate width; range 0.1..4.0
+        height = 0.40                   # Rendered plate height; range 0.1..4.0
+        back_offset = 0.19              # Plate center behind player origin; range 0.0..2.0
+        vertical_offset = 1.16          # Plate center above player feet; range 0.0..3.0
+        text_scale = 0.015              # Text pixel size in world blocks; range 0.001..0.1
+        paper_color = "#FFFFFFFF"       # ARGB or RGB hexadecimal color
+        border_color = "#FF585858"      # ARGB or RGB hexadecimal color
+        text_color = "#FF105BD7"        # Default text color; styled components can override it
 
         [trinkets]
         auto_equip_on_enable = true     # /teartag enable fills the dedicated slot when Trinkets Updated is installed

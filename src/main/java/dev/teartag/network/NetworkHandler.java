@@ -6,6 +6,7 @@ import dev.teartag.game.NametagService;
 import dev.teartag.integration.AccessoryIntegrations;
 import dev.teartag.state.NametagSavedData;
 import dev.teartag.state.PlayerNametag;
+import dev.teartag.state.NametagEntityData;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -29,6 +30,7 @@ public final class NetworkHandler {
             syncAllTo(joined, server);
             PlayerNametag joinedState = NametagSavedData.get(server).get(joined.getUUID());
             if (joinedState != null && joinedState.enabled) {
+                NametagEntityData.write(joined, joinedState);
                 AccessoryIntegrations.ensureNametagEquipped(joined);
                 syncToAll(joined, joinedState);
             }
@@ -36,6 +38,7 @@ public final class NetworkHandler {
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
             PlayerNametag state = NametagSavedData.get(newPlayer.level().getServer()).get(newPlayer.getUUID());
             if (state != null && state.enabled) {
+                NametagEntityData.write(newPlayer, state);
                 AccessoryIntegrations.ensureNametagEquipped(newPlayer);
                 syncToAll(newPlayer, state);
             }
@@ -74,6 +77,6 @@ public final class NetworkHandler {
         NameTagConfig c = ConfigManager.get();
         ServerPlayNetworking.send(receiver, new SyncNametagPayload(subject.getId(), subject.getUUID(), state.enabled, state.text.copy(),
             state.tears, state.eliminated, c.requiredTears(), c.attackDistance(), c.tagWidth(), c.tagHeight(), c.tagBackOffset(), c.tagVerticalOffset(),
-            c.textScale(), c.maxTextLines(), c.paperColor(), c.borderColor(), c.soundsEnabled(), c.tornAnimationTicks()));
+            c.textScale(), c.maxTextLines(), c.paperColor(), c.borderColor(), c.textColor(), c.soundsEnabled(), c.tornAnimationTicks()));
     }
 }

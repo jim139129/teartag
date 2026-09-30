@@ -41,7 +41,11 @@ public final class PlayerNametag {
     }
 
     public static PlayerNametag create(Component text) {
-        return new PlayerNametag(true, text.copy(), 0, false,
+        return create(text, 0, false);
+    }
+
+    public static PlayerNametag create(Component text, int tears, boolean eliminated) {
+        return new PlayerNametag(true, text.copy(), tears, eliminated,
             Identifier.fromNamespaceAndPath("teartag", "any_participant"), 0L, 0L, false);
     }
 

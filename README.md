@@ -17,6 +17,17 @@ Optional accessory storage:
 - When Trinkets is installed, `/teartag enable` automatically fills that slot if configured. Dynamic back rendering continues to use TearTag's server-authoritative state.
 - Trinkets settings are under `[trinkets]` in `config/teartag.toml`. They control automatic equip, enabling on equip, and disabling on unequip. The core mod remains usable without Trinkets.
 
+## Persistence and Replay Compatibility
+
+Nametag state is stored in two complementary places:
+
+- The authoritative text, tear count, eliminated state, and enabled state are attached to the player entity and saved in the player's `teartag_nametag` NBT compound.
+- The `teartag:nametag` item stores only the display text in item custom data. Its item name is kept synchronized with the displayed nametag text.
+
+This keeps state across server restarts, player saves, and player replacement. Trinkets is only an optional equipment integration; it is not a second source of gameplay state, and TearTag does not require a Trinkets slot to render or restore a nametag.
+
+The same state is exposed through vanilla entity metadata. Replay tools that record player entity data can therefore restore the nametag without recording Trinkets inventory contents. On the client, rendering first uses synchronized player state and then falls back to the nametag item, including an item that only has a custom display name. This allows recorded scenes to render without requiring a live server update or a successfully replayed TearTag payload. If the recording contains no enabled nametag state, the client does not render one.
+
 Build on Windows:
 
 ```powershell
@@ -41,6 +52,8 @@ Build on Windows:
 ```
 
 Enabling a player for the first time snapshots their current display name. `text reset` takes a new snapshot. State is stored by UUID in the world and survives restarts.
+
+Changing text through `/teartag text ...` updates the active player state and the stored nametag item's display name together. Tearing, recovery, elimination, reset, enable, and disable update the player state only; they never compete with item data.
 
 ## Mechanics
 

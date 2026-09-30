@@ -12,6 +12,7 @@
     "main": ["dev.teartag.NameTagMod"],
     "client": ["dev.teartag.client.NameTagClient"]
   },
+  "mixins": ["teartag.mixins.json"],
   "depends": {
     "fabricloader": ">=0.19.5",
     "minecraft": "26.3",

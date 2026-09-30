@@ -37,6 +37,7 @@ public record NameTagConfig(
     float textScale,
     int paperColor,
     int borderColor,
+    int textColor,
     boolean trinketsAutoEquipOnEnable,
     boolean trinketsEnableOnEquip,
     boolean trinketsDisableOnUnequip,
@@ -47,8 +48,8 @@ public record NameTagConfig(
             3.0, 2, 20, 10, 0.15, 0.25, 5, 20, 20, 200,
             "minecraft:overworld", 0.5, 64.0, 0.5, 0.0F, 0.0F, true,
             true, true, true, 30, true, 100, 2, 64, 2,
-            0.82, 0.55, 0.32, 0.95, 0.010F,
-            0xFFF5F1E8, 0xFF34312C,
+            0.60, 0.40, 0.19, 1.16, 0.015F,
+            0xFFFFFFFF, 0xFF585858, 0xFF105BD7,
             true, true, true, false
         );
     }
@@ -79,6 +80,31 @@ public record NameTagConfig(
             errors.add("elimination.dimension must be a resource identifier");
         }
         return errors;
+    }
+
+    static double[] migrateLegacyRenderSize(double width, double height, double defaultWidth, double defaultHeight) {
+        boolean originalDefault = Double.compare(width, 0.30) == 0 && Double.compare(height, 0.22) == 0;
+        boolean previousDefault = Double.compare(width, 0.36) == 0 && Double.compare(height, 0.264) == 0;
+        boolean enlargedDefault = Double.compare(width, 0.60) == 0 && Double.compare(height, 0.50) == 0;
+        boolean currentDefault = Double.compare(width, 0.82) == 0 && Double.compare(height, 0.55) == 0;
+        return originalDefault || previousDefault || enlargedDefault || currentDefault
+            ? new double[] { defaultWidth, defaultHeight }
+            : new double[] { width, height };
+    }
+
+    static double migrateLegacyBackOffset(double backOffset, double defaultBackOffset) {
+        return Double.compare(backOffset, 0.13) == 0 || Double.compare(backOffset, 0.32) == 0
+            ? defaultBackOffset : backOffset;
+    }
+
+    static double migrateLegacyVerticalOffset(double verticalOffset, double defaultVerticalOffset) {
+        return Double.compare(verticalOffset, 1.21) == 0 || Double.compare(verticalOffset, 0.95) == 0
+            ? defaultVerticalOffset : verticalOffset;
+    }
+
+    static float migrateLegacyTextScale(float textScale, float defaultTextScale) {
+        return Float.compare(textScale, 0.025F) == 0 || Float.compare(textScale, 0.010F) == 0
+            ? defaultTextScale : textScale;
     }
 
     private static void range(List<String> errors, String key, double value, double min, double max) {

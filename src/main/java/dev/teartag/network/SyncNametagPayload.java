@@ -11,7 +11,7 @@ import net.minecraft.resources.Identifier;
 public record SyncNametagPayload(
     int entityId, UUID playerId, boolean enabled, Component text, int tears, boolean eliminated, int requiredTears,
     double attackDistance, double width, double height, double backOffset, double verticalOffset, float textScale, int maxTextLines,
-    int paperColor, int borderColor, boolean soundsEnabled, int tornAnimationTicks
+    int paperColor, int borderColor, int textColor, boolean soundsEnabled, int tornAnimationTicks
 ) implements CustomPacketPayload {
     public static final Type<SyncNametagPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath("teartag", "sync"));
     public static final StreamCodec<RegistryFriendlyByteBuf, SyncNametagPayload> CODEC = CustomPacketPayload.codec(
@@ -35,6 +35,7 @@ public record SyncNametagPayload(
         buf.writeVarInt(maxTextLines);
         buf.writeInt(paperColor);
         buf.writeInt(borderColor);
+        buf.writeInt(textColor);
         buf.writeBoolean(soundsEnabled);
         buf.writeVarInt(tornAnimationTicks);
     }
@@ -42,7 +43,7 @@ public record SyncNametagPayload(
     private static SyncNametagPayload read(RegistryFriendlyByteBuf buf) {
         return new SyncNametagPayload(buf.readVarInt(), buf.readUUID(), buf.readBoolean(), ComponentSerialization.STREAM_CODEC.decode(buf),
             buf.readVarInt(), buf.readBoolean(), buf.readVarInt(), buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readDouble(),
-            buf.readFloat(), buf.readVarInt(), buf.readInt(), buf.readInt(), buf.readBoolean(), buf.readVarInt());
+            buf.readFloat(), buf.readVarInt(), buf.readInt(), buf.readInt(), buf.readInt(), buf.readBoolean(), buf.readVarInt());
     }
 
     @Override

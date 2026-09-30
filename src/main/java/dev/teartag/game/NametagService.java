@@ -7,8 +7,11 @@ import dev.teartag.network.FeedbackPayload;
 import dev.teartag.rule.AttackRule;
 import dev.teartag.rule.AttackRuleManager;
 import dev.teartag.integration.AccessoryIntegrations;
+import dev.teartag.item.NametagItemData;
+import dev.teartag.item.NametagItems;
 import dev.teartag.state.NametagSavedData;
 import dev.teartag.state.PlayerNametag;
+import dev.teartag.state.NametagEntityData;
 import java.util.UUID;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +23,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 
 public final class NametagService {
@@ -32,15 +36,20 @@ public final class NametagService {
     public static PlayerNametag enable(ServerPlayer player) {
         NametagSavedData data = NametagSavedData.get(player.level().getServer());
         PlayerNametag state = data.get(player.getUUID());
+        AccessoryIntegrations.ensureNametagEquipped(player);
+        ItemStack item = nametagItem(player);
         if (state == null) {
-            state = PlayerNametag.create(player.getDisplayName());
+            state = NametagItemData.read(item)
+                .map(snapshot -> PlayerNametag.create(snapshot.text()))
+                .orElseGet(() -> PlayerNametag.create(player.getDisplayName()));
             data.put(player.getUUID(), state);
         } else {
             state.enabled = true;
             data.setDirty();
         }
         NetworkHandler.syncToAll(player, state);
-        AccessoryIntegrations.ensureNametagEquipped(player);
+        persistItem(player, state);
+        NametagEntityData.write(player, state);
         DatapackEvents.fire("on_enable", player, null, false);
         for (var listener : NametagEvents.ENABLED) listener.accept(player, state.view(player.getUUID()));
         return state;
@@ -51,6 +60,7 @@ public final class NametagService {
         if (state == null) return;
         state.enabled = false;
         NametagSavedData.get(player.level().getServer()).setDirty();
+        NametagEntityData.write(player, state);
         NetworkHandler.removeFromAll(player);
         DatapackEvents.fire("on_disable", player, null, false);
         for (var listener : NametagEvents.DISABLED) listener.accept(player, state.view(player.getUUID()));
@@ -79,6 +89,7 @@ public final class NametagService {
 
     public static void resetAll(ServerPlayer player) {
         NametagSavedData.get(player.level().getServer()).remove(player.getUUID());
+        ((NametagEntityData) (Object) player).teartag$setNametagState(Component.empty(), 0, false, false);
         NetworkHandler.removeFromAll(player);
         DatapackEvents.fire("on_reset", player, null, false);
     }
@@ -119,12 +130,15 @@ public final class NametagService {
         targetState.tears++;
         targetState.nextRecoveryAtMillis = System.currentTimeMillis() + config.firstRecoveryDelayTicks() * 50L;
         NametagSavedData.get(target.level().getServer()).setDirty();
+        NametagEntityData.write(target, targetState);
+        persistItem(target, targetState);
         ATTACKER_HUD.put(attacker.getUUID(), new HudTarget(target.getUUID(), config.attackerActionbarTicks()));
         if (config.soundsEnabled()) target.playSound(SoundEvents.PLAYER_HURT, 0.8F, 1.2F);
         sendFeedback(attacker, FeedbackPayload.Kind.SUCCESS, target);
         DatapackEvents.fire("on_tear_success", target, attacker, wall);
         for (var listener : NametagEvents.AFTER_TEAR) listener.accept(attacker, target, targetState.view(target.getUUID()), wall);
         if (targetState.tears >= config.requiredTears()) eliminate(attacker, target, targetState, wall);
+        NametagEntityData.write(target, targetState);
         NetworkHandler.syncToAll(target, targetState);
     }
 
@@ -142,6 +156,7 @@ public final class NametagService {
                 state.tears--;
                 state.nextRecoveryAtMillis = state.tears == 0 ? 0 : nowMillis + ConfigManager.get().recoveryIntervalTicks() * 50L;
                 data.setDirty();
+                NametagEntityData.write(player, state);
                 NetworkHandler.syncToAll(player, state);
                 DatapackEvents.fire("on_recover", player, null, false);
                 for (var listener : NametagEvents.RECOVERED) listener.accept(player, state.view(player.getUUID()));
@@ -270,7 +285,25 @@ public final class NametagService {
 
     private static void changed(ServerPlayer player, PlayerNametag state) {
         NametagSavedData.get(player.level().getServer()).setDirty();
+        persistItem(player, state);
+        NametagEntityData.write(player, state);
         NetworkHandler.syncToAll(player, state);
+    }
+
+    private static void persistItem(ServerPlayer player, PlayerNametag state) {
+        ItemStack item = nametagItem(player);
+        if (!item.isEmpty()) NametagItemData.write(item, state.text);
+    }
+
+    private static ItemStack nametagItem(ServerPlayer player) {
+        ItemStack accessory = AccessoryIntegrations.nametagStack(player);
+        if (!accessory.isEmpty()) return accessory;
+        for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
+            if (stack.is(NametagItems.NAMETAG)) return stack;
+        }
+        ItemStack created = new ItemStack(NametagItems.NAMETAG);
+        if (player.getInventory().add(created)) return created;
+        return ItemStack.EMPTY;
     }
 
     private static Component sanitize(Component source) {

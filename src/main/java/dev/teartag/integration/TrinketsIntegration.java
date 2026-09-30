@@ -75,6 +75,12 @@ public final class TrinketsIntegration implements AccessoryIntegration {
         return TrinketsApi.getAttachment(player).isEquipped(NametagItems.NAMETAG);
     }
 
+    @Override
+    public ItemStack nametagStack(ServerPlayer player) {
+        TrinketSlotAccess slot = TrinketsApi.getAttachment(player).getSlotAccess(SLOT_ID, 0);
+        return slot == null ? ItemStack.EMPTY : slot.get();
+    }
+
     private static ItemStack findInventoryStack(ServerPlayer player) {
         for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
             if (stack.is(NametagItems.NAMETAG)) return stack;

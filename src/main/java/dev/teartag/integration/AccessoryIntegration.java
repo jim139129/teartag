@@ -1,6 +1,7 @@
 package dev.teartag.integration;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Small server-side bridge for optional accessory integrations.
@@ -21,6 +22,10 @@ public interface AccessoryIntegration {
 
     default boolean isNametagEquipped(ServerPlayer player) {
         return false;
+    }
+
+    default ItemStack nametagStack(ServerPlayer player) {
+        return ItemStack.EMPTY;
     }
 
     default void onNametagUnequipped(ServerPlayer player) {

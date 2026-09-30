@@ -1,6 +1,7 @@
 package dev.teartag.integration;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 
 public final class AccessoryIntegrations {
     private static volatile AccessoryIntegration current = AccessoryIntegration.NONE;
@@ -22,6 +23,10 @@ public final class AccessoryIntegrations {
 
     public static boolean isNametagEquipped(ServerPlayer player) {
         return current.isNametagEquipped(player);
+    }
+
+    public static ItemStack nametagStack(ServerPlayer player) {
+        return current.nametagStack(player);
     }
 
     public static void onNametagUnequipped(ServerPlayer player) {
